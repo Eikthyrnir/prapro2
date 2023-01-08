@@ -18,16 +18,10 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeRepo employeeRepo;
-    @Autowired
-    private EmployeeCarRepo employeeCarRepo;
-    @Autowired
-    private ProjectRepo projectRepo;
-    @Autowired
-    private TaskRepo taskRepo;
 
     @GetMapping("/employee/{id}")
     public ResponseEntity<Employee> byId(@PathVariable("id") int id) {
-        return ResponseEntity.of(Optional.of(new Employee()));
+        return ResponseEntity.of(employeeRepo.findById(id));
     }
 
 
