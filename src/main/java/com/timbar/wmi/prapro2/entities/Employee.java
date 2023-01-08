@@ -15,10 +15,10 @@ public class Employee {
     private String firstName;
     private String lastName;
     private String pesel;
-    @OneToMany(mappedBy = "executor")
-    private List<Task> tasks;
-    @OneToOne(mappedBy = "assignedTo")
-    private EmployeeCar car;
+//    @OneToMany(mappedBy = "executor")
+//    private List<Task> tasks;
+//    @OneToOne(mappedBy = "assignedTo")
+//    private EmployeeCar car;
     @ManyToMany
     @JoinTable(
             name = "employee_project",

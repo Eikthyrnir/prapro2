@@ -1,10 +1,10 @@
--- DROP TABLE IF EXISTS work_office.ticket;
--- DROP TABLE IF EXISTS work_office.viewing_room_seat;
--- DROP TABLE IF EXISTS work_office.movie_session;
--- DROP TABLE IF EXISTS work_office.viewing_room;
--- DROP TABLE IF EXISTS work_office.movie;
---
--- DROP SCHEMA IF EXISTS work_office;
+DROP TABLE IF EXISTS work_office.employee_cars;
+DROP TABLE IF EXISTS work_office.tasks;
+DROP TABLE IF EXISTS work_office.employee_project;
+DROP TABLE IF EXISTS work_office.employees;
+DROP TABLE IF EXISTS work_office.projects;
+
+DROP SCHEMA IF EXISTS work_office;
 
 CREATE SCHEMA work_office AUTHORIZATION postgres;
 
@@ -56,7 +56,7 @@ CREATE TABLE work_office.tasks
     id              SERIAL,
     name            VARCHAR NOT NULL,
     description     VARCHAR NOT NULL,
-    created_time    TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+    created_at      TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
     employee_id     integer,
     CONSTRAINT tasks_pk PRIMARY KEY (id),
     CONSTRAINT tasks_employee_fk FOREIGN KEY (employee_id) REFERENCES work_office.employees (id)
