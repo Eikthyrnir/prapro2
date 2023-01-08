@@ -64,6 +64,9 @@ public class TaskController {
         if (task.getExecutor() != null) {
             taskToPatch.setExecutor(task.getExecutor());
         }
+        if (task.getCreatedAt() != null) {
+            taskToPatch.setCreatedAt(task.getCreatedAt());
+        }
         return ResponseEntity.ok(taskService.save(taskToPatch));
     }
 
