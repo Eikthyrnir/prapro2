@@ -1,7 +1,7 @@
 package com.timbar.wmi.prapro2.controllers;
 
 import com.timbar.wmi.prapro2.entities.Task;
-import com.timbar.wmi.prapro2.repositories.TaskRepo;
+import com.timbar.wmi.prapro2.services.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.PageRequest;
@@ -13,18 +13,17 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/api", produces = "application/json")
 public class TaskController {
 
     @Autowired
-    private TaskRepo taskRepo;
+    private TaskService taskService;
 
     @GetMapping("/task/{id}")
     public ResponseEntity<Task> byId(@PathVariable("id") int id) {
-        return ResponseEntity.of(taskRepo.findById(id));
+        return ResponseEntity.of(taskService.getById(id));
     }
 
     @GetMapping("/tasks")
@@ -38,25 +37,24 @@ public class TaskController {
         }
         PageRequest pageRequest = PageRequest.of(page, size)
                 .withSort(Sort.by("createdAt").descending());
-        return taskRepo.findAll(pageRequest).getContent();
+        return taskService.getAllTasks(pageRequest);
     }
 
     @PostMapping("/task")
     @ResponseStatus(HttpStatus.CREATED)
     public Task createNewTask(@RequestBody Task task) {
-        return taskRepo.save(task);
+        return taskService.save(task);
     }
 
     @PatchMapping("/task/{id}")
     public ResponseEntity<Task> patchTask(@PathVariable("id") int id,
                                           @RequestBody @Validated Task task) {
-        Optional<Task> taskToPatchOptional = taskRepo.findById(id);
 
-        if (taskToPatchOptional.isEmpty()) {
+        if (!taskService.checkIfExistById(id)) {
             return ResponseEntity.notFound().build();
         }
 
-        Task taskToPatch = taskToPatchOptional.get();
+        Task taskToPatch = taskService.getById(id).get();
         if (task.getName() != null) {
             taskToPatch.setName(task.getName());
         }
@@ -66,14 +64,14 @@ public class TaskController {
         if (task.getExecutor() != null) {
             taskToPatch.setExecutor(task.getExecutor());
         }
-        return ResponseEntity.ok(taskRepo.save(taskToPatch));
+        return ResponseEntity.ok(taskService.save(taskToPatch));
     }
 
     @DeleteMapping("/task/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTask(@PathVariable("id") int id) {
         try {
-            taskRepo.deleteById(id);
+            taskService.deleteById(id);
         } catch (EmptyResultDataAccessException ignore) {
             //no such task
         }
