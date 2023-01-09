@@ -1,6 +1,8 @@
 package com.timbar.wmi.prapro2.controllers;
 
+import com.timbar.wmi.prapro2.entities.Employee;
 import com.timbar.wmi.prapro2.entities.Task;
+import com.timbar.wmi.prapro2.repositories.EmployeeRepo;
 import com.timbar.wmi.prapro2.services.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -11,8 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/api", produces = "application/json")
@@ -20,6 +24,8 @@ public class TaskController {
 
     @Autowired
     private TaskService taskService;
+    @Autowired
+    private EmployeeRepo employeeRepo;
 
     @GetMapping("/task/{id}")
     public ResponseEntity<Task> byId(@PathVariable("id") int id) {
@@ -43,29 +49,44 @@ public class TaskController {
     @PostMapping("/task")
     @ResponseStatus(HttpStatus.CREATED)
     public Task createNewTask(@RequestBody Task task) {
+        if (task.getExecutor() != null) {
+            int executorId = task.getExecutor().getId();
+            Optional<Employee> executor = employeeRepo.findById(executorId);
+            if (executor.isEmpty()) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST, "no employee with id = " + executorId);
+            }
+            task.setExecutor(executor.get());
+        }
         return taskService.save(task);
     }
 
     @PatchMapping("/task/{id}")
     public ResponseEntity<Task> patchTask(@PathVariable("id") int id,
-                                          @RequestBody @Validated Task task) {
+                                          @RequestBody @Validated Task patch) {
 
         if (!taskService.checkIfExistById(id)) {
             return ResponseEntity.notFound().build();
         }
 
         Task taskToPatch = taskService.getById(id).get();
-        if (task.getName() != null) {
-            taskToPatch.setName(task.getName());
+        if (patch.getName() != null) {
+            taskToPatch.setName(patch.getName());
         }
-        if (task.getDescription() != null) {
-            taskToPatch.setDescription(task.getDescription());
+        if (patch.getDescription() != null) {
+            taskToPatch.setDescription(patch.getDescription());
         }
-        if (task.getExecutor() != null) {
-            taskToPatch.setExecutor(task.getExecutor());
+        if (patch.getExecutor() != null) {
+            int executorId = patch.getExecutor().getId();
+            Optional<Employee> executor = employeeRepo.findById(executorId);
+            if (executor.isEmpty()) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST, "no employee with id = " + executorId);
+            }
+            taskToPatch.setExecutor(executor.get());
         }
-        if (task.getCreatedAt() != null) {
-            taskToPatch.setCreatedAt(task.getCreatedAt());
+        if (patch.getCreatedAt() != null) {
+            taskToPatch.setCreatedAt(patch.getCreatedAt());
         }
         return ResponseEntity.ok(taskService.save(taskToPatch));
     }
