@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS work_office.tasks;
 DROP TABLE IF EXISTS work_office.employee_project;
 DROP TABLE IF EXISTS work_office.employees;
 DROP TABLE IF EXISTS work_office.projects;
+DROP TABLE IF EXISTS work_office.users;
 
 DROP SCHEMA IF EXISTS work_office;
 
@@ -64,3 +65,10 @@ CREATE TABLE work_office.tasks
         ON DELETE NO ACTION
 );
 
+CREATE TABLE IF NOT EXISTS work_office.users
+(
+    id         SERIAL,
+    "login"    varchar NOT NULL UNIQUE ,
+    "password" varchar NOT NULL,
+    CONSTRAINT users_pk PRIMARY KEY (id)
+);

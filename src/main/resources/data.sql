@@ -39,3 +39,10 @@ VALUES
     (1, 1),
     (1, 2),
     (4, 2);
+
+insert into work_office.users
+    (login, password)
+VALUES
+    ('1', '$2a$10$zc86pQ6ujG0MZKaaS1EY6uWb.Zmx6SGmRhwU6et9AeXsY5Bd8UKP.'), -- password '111'
+    ('2', '$2a$10$6aJFNP1VyKwMaSBXJoJgG.Mwar1iclX7hse0e09eAElaA1XFG1F1q'), -- password '222'
+    ('3', '$2a$10$4zh5WbznTQMQruMIpxZtce5Lm4.DJcGSgwMdyDyo.f1NfNNQpKg/e'); -- password '333'

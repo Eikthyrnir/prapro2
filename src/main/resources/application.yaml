@@ -16,3 +16,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres
     username: username
     password: password
+
+jwt:
+  secret: qwe283as1dz09cx
+  expirationInMilliseconds: 86400000
