@@ -1,6 +1,7 @@
 package com.timbar.wmi.prapro2.repositories;
 
 import com.timbar.wmi.prapro2.entities.Task;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -12,6 +13,8 @@ public interface TaskRepo extends
         PagingAndSortingRepository<Task, Integer> {
 
     List<Task> findAll();
+
+    List<Task> findByExecutorId(Pageable pageable, String executorId);
 
     @Query("select count(t) > 0 from Task t where t.id = :id")
     boolean chackExistanceById(int id);

@@ -9,6 +9,9 @@ import java.util.Optional;
 public interface TaskService {
 
     List<Task> getAllTasks(Pageable pageable);
+
+    List<Task> getAllTasksByExecutorId(Pageable pageable, String executorId);
+
     Optional<Task> getById(int id);
     Task save(Task task);
     void deleteById(int id);

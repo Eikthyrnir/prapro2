@@ -45,9 +45,9 @@ public class AuthenticationController {
 
             return new ResponseEntity<>(loginResponse, HttpStatus.OK);
         }catch (BadCredentialsException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильный login или пароль");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad credentials", e);
         } catch (AuthenticationException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Authentication failed", e);
         }
     }
 

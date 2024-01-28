@@ -2,7 +2,6 @@ package com.timbar.wmi.prapro2.authentication;
 
 import com.timbar.wmi.prapro2.entities.User;
 import com.timbar.wmi.prapro2.services.UserRepoUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,8 +15,11 @@ import java.security.Principal;
 @RequestMapping("/api/user")
 public class UserController {
 
-    @Autowired
-    private UserRepoUserDetailsService service;
+    private final UserRepoUserDetailsService service;
+
+    public UserController(UserRepoUserDetailsService service) {
+        this.service = service;
+    }
 
     @PreAuthorize("hasAuthority('ROLE_USER')")
     @GetMapping("/get")
